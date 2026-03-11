@@ -1,19 +1,19 @@
 import express from "express";
- 
+
 const app = express();
 const PORT = process.env.PORT || 10000;
- 
+
 app.use(express.json());
- 
+
 app.get("/", (req, res) => {
   res.send("Bettermode Render app is running");
 });
- 
+
 app.post("/", (req, res) => {
   const body = req.body || {};
   const appId = body?.data?.appId;
   const interactionId = body?.data?.interactionId;
- 
+
   const responsePayload = {
     type: "INTERACTION",
     status: "SUCCEEDED",
@@ -36,31 +36,47 @@ app.post("/", (req, res) => {
               {
                 id: "header",
                 name: "Card.Header",
-                props: "{\"title\":\"Video Test\"}",
+                props: "{\"title\":\"TikTok Test\"}",
                 children: "[]"
               },
               {
                 id: "content",
                 name: "Card.Content",
-                props: "{\"className\":\"space-y-3\"}",
+                props: "{\"className\":\"space-y-4\"}",
                 children: "[\"stack\"]"
               },
               {
                 id: "stack",
                 name: "Container",
                 props: "{\"direction\":\"vertical\",\"padding\":\"sm\"}",
-                children: "[\"text1\",\"iframe1\"]"
+                children: "[\"text1\",\"tiktokLink\",\"text2\",\"tiktokIframe\"]"
               },
+
               {
                 id: "text1",
                 name: "Text",
-                props: "{\"value\":\"Testing YouTube iframe\",\"size\":\"md\"}",
+                props: "{\"value\":\"TikTok link (href variant)\",\"size\":\"md\",\"weight\":\"bold\"}",
                 children: "[]"
               },
+
               {
-                id: "iframe1",
+                id: "tiktokLink",
+                name: "Link",
+                props: "{\"href\":\"https://www.tiktok.com/@scout2015/video/6718335390845095173\",\"external\":true,\"variant\":\"primary\"}",
+                children: "[]"
+              },
+
+              {
+                id: "text2",
+                name: "Text",
+                props: "{\"value\":\"TikTok iframe embed\",\"size\":\"md\",\"weight\":\"bold\"}",
+                children: "[]"
+              },
+
+              {
+                id: "tiktokIframe",
                 name: "Iframe",
-                props: "{\"src\":\"https://www.youtube.com/embed/H98Rfljxmsc\",\"height\":400,\"title\":\"YouTube video\"}",
+                props: "{\"src\":\"https://www.tiktok.com/embed/v2/6718335390845095173\",\"height\":600,\"title\":\"TikTok video\"}",
                 children: "[]"
               }
             ]
@@ -69,10 +85,10 @@ app.post("/", (req, res) => {
       ]
     }
   };
- 
+
   return res.status(200).json(responsePayload);
 });
- 
+
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
