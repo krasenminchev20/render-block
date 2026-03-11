@@ -1,5 +1,5 @@
 {
-  "name": "render-test",
+  "name": "render-block",
   "version": "1.0.0",
   "type": "module",
   "main": "server.js",
