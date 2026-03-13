@@ -10,6 +10,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", (req, res) => {
+
   const body = req.body || {};
   const appId = body?.data?.appId;
   const interactionId = body?.data?.interactionId;
@@ -32,7 +33,7 @@ app.post("/", (req, res) => {
                 id: "root",
                 name: "Container",
                 props: "{\"className\":\"space-y-6\",\"direction\":\"vertical\",\"padding\":\"md\"}",
-                children: "[\"header\",\"progress\",\"script\",\"video1\",\"video2\",\"video3\",\"video4\"]"
+                children: "[\"header\",\"counter\",\"video1\",\"video2\",\"video3\",\"video4\"]"
               },
 
               {
@@ -43,44 +44,37 @@ app.post("/", (req, res) => {
               },
 
               {
-                id: "progress",
+                id: "counter",
                 name: "Html",
-                props: "{\"html\":\"<div style='width:100%;background:#222;border-radius:10px;height:10px;margin-bottom:10px'><div id=bar style='height:10px;width:0%;background:#22c55e;border-radius:10px'></div></div><div id=count style='font-size:14px'>0 / 4 videos played</div>\"}",
-                children: "[]"
-              },
-
-              {
-                id: "script",
-                name: "Html",
-                props: "{\"html\":\"<script>let played=0;const total=4;function update(){document.getElementById('count').innerText=played+' / '+total+' videos played';document.getElementById('bar').style.width=(played/total*100)+'%';}document.addEventListener('click',e=>{const iframe=e.target.closest('iframe');if(iframe && !iframe.dataset.played){iframe.dataset.played=true;played++;update();}});</script>\"}",
+                props: "{\"html\":\"<div style='margin-bottom:20px'><div style='width:100%;height:8px;background:#2a2a2a;border-radius:8px;overflow:hidden'><div id=progressbar style='height:8px;width:0%;background:#22c55e'></div></div><div id=videocount style='margin-top:8px;font-size:14px'>0 / 4 videos played</div></div><script>let played=0;const total=4;function update(){document.getElementById('videocount').innerText=played+' / '+total+' videos played';document.getElementById('progressbar').style.width=(played/total*100)+'%';}document.addEventListener('pointerdown',e=>{const iframe=e.target.closest('iframe');if(iframe && !iframe.dataset.counted){iframe.dataset.counted=true;played++;update();}});</script>\"}",
                 children: "[]"
               },
 
               {
                 id: "video1",
                 name: "Iframe",
-                props: "{\"src\":\"https://www.youtube.com/embed/DNEdnKq9Hj0\",\"height\":315,\"title\":\"DNB Video 1\"}",
+                props: "{\"src\":\"https://www.youtube.com/embed/DNEdnKq9Hj0\",\"height\":315}",
                 children: "[]"
               },
 
               {
                 id: "video2",
                 name: "Iframe",
-                props: "{\"src\":\"https://www.youtube.com/embed/Qtogm_mo1AQ\",\"height\":315,\"title\":\"DNB Video 2\"}",
+                props: "{\"src\":\"https://www.youtube.com/embed/Qtogm_mo1AQ\",\"height\":315}",
                 children: "[]"
               },
 
               {
                 id: "video3",
                 name: "Iframe",
-                props: "{\"src\":\"https://www.youtube.com/embed/G00dmXhboaw\",\"height\":315,\"title\":\"DNB Video 3\"}",
+                props: "{\"src\":\"https://www.youtube.com/embed/G00dmXhboaw\",\"height\":315}",
                 children: "[]"
               },
 
               {
                 id: "video4",
                 name: "Iframe",
-                props: "{\"src\":\"https://www.youtube.com/embed/3jsHPvjxR7A\",\"height\":315,\"title\":\"DNB Video 4\"}",
+                props: "{\"src\":\"https://www.youtube.com/embed/3jsHPvjxR7A\",\"height\":315}",
                 children: "[]"
               }
 
@@ -92,6 +86,7 @@ app.post("/", (req, res) => {
   };
 
   return res.status(200).json(responsePayload);
+
 });
 
 app.listen(PORT, () => {
