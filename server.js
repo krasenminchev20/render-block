@@ -1,177 +1,187 @@
 import express from "express";
-import cors from "cors";
+
+
 
 const app = express();
+
 const PORT = process.env.PORT || 10000;
 
-app.use(cors());
+
+
 app.use(express.json());
 
-// Тук пазим кой колко е гледал
-let userStats = {};
 
-// 1. ВАЖНО: Сложи тук твоя линк от Render!
-const MY_RENDER_URL = "https://render-block-837h.onrender.com"; 
 
-app.post("/log-play", (req, res) => {
-  const { userName } = req.body;
-  if (userName) {
-    userStats[userName] = (userStats[userName] || 0) + 1;
-  }
-  res.json({ success: true, stats: userStats });
+app.get("/", (req, res) => {
+
+  res.send("Bettermode Render app is running");
+
 });
 
-app.get("/stats", (req, res) => res.json(userStats));
-app.get("/", (req, res) => res.send("Bettermode Render app is running"));
+
 
 app.post("/", (req, res) => {
+
+
+
   const body = req.body || {};
+
   const appId = body?.data?.appId;
+
   const interactionId = body?.data?.interactionId;
-  const userName = body?.data?.context?.member?.name || "Guest";
 
-  // HTML Блокът с новия брояч и класация
-  const htmlContent = `
-    <div style="padding:16px; background:#1f1f1f; border-radius:8px; color:#fff; font-family:sans-serif; text-align:center; border: 1px solid #333;">
-      <div style="margin-bottom:8px; font-weight:bold; font-size:16px;">Total Community Plays</div>
-      <div id="total-video-counter" style="font-size:32px; font-weight:bold; color:#22c55e; margin: 10px 0;">0</div>
-      <div id="leaderboard" style="text-align:left; font-size:12px; border-top:1px solid #333; margin-top:10px; padding-top:10px;">
-        <div style="color:#888; margin-bottom:5px;">Leaderboard:</div>
-        <div id="stats-list">No data yet</div>
-      </div>
-    </div>
 
-    <script>
-      (function() {
-        const userName = "${userName}";
-        const serverUrl = "${MY_RENDER_URL}";
-
-        async function updateStats() {
-          try {
-            const r = await fetch(serverUrl + "/stats");
-            const data = await r.json();
-            renderUI(data);
-          } catch(e) { console.error(e); }
-        }
-
-        function renderUI(stats) {
-          const list = document.getElementById('stats-list');
-          const counter = document.getElementById('total-video-counter');
-          if(!list || !stats) return;
-          let html = '';
-          let total = 0;
-          for (let user in stats) {
-            total += stats[user];
-            html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;">' +
-                    '<span>' + user + '</span><span style="color:#22c55e;">' + stats[user] + '</span></div>';
-          }
-          list.innerHTML = html || "No data";
-          counter.innerText = total;
-        }
-
-        window.reportPlay = async function() {
-          try {
-            const r = await fetch(serverUrl + "/log-play", {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ userName: userName })
-            });
-            const data = await r.json();
-            renderUI(data.stats);
-          } catch(e) { console.error(e); }
-        };
-
-        if (!window.YT) {
-          let t = document.createElement('script');
-          t.src = "https://www.youtube.com/iframe_api";
-          document.head.appendChild(t);
-        }
-
-        window.onYouTubeIframeAPIReady = function() {
-          setTimeout(() => {
-            const iframes = document.querySelectorAll('iframe[src*="youtube.com"]');
-            iframes.forEach(iframe => {
-              new YT.Player(iframe, {
-                events: {
-                  'onStateChange': (e) => {
-                    if (e.data === 1 && !iframe.dataset.playing) {
-                      window.reportPlay();
-                      iframe.dataset.playing = "true";
-                    } else if (e.data === 0) { iframe.dataset.playing = ""; }
-                  }
-                }
-              });
-            });
-          }, 2000);
-        };
-        updateStats();
-      })();
-    </script>
-  `;
 
   const responsePayload = {
+
     type: "INTERACTION",
+
     status: "SUCCEEDED",
+
     data: {
+
       appId,
+
       interactionId,
+
       interactions: [
+
         {
+
           type: "SHOW",
+
           id: interactionId,
+
           slate: {
+
             rootBlock: "root",
+
             blocks: [
+
+
+
               {
+
                 id: "root",
+
                 name: "Container",
-                props: JSON.stringify({ className: "space-y-6", direction: "vertical", padding: "md" }),
-                children: ["header", "counter", "video1", "video2", "video3", "video4"]
+
+                props: "{\"className\":\"space-y-6\",\"direction\":\"vertical\",\"padding\":\"md\"}",
+
+                children: "[\"header\",\"counter\",\"video1\",\"video2\",\"video3\",\"video4\"]"
+
               },
+
+
+
               {
+
                 id: "header",
+
                 name: "Text",
-                props: JSON.stringify({ size: "lg", weight: "bold", value: "Enjoy these hits" }),
-                children: []
+
+                props: "{\"size\":\"lg\",\"weight\":\"bold\",\"value\":\"Enjoy these hits\"}",
+
+                children: "[]"
+
               },
+
+
+
               {
+
                 id: "counter",
+
                 name: "Html",
-                props: JSON.stringify({ html: htmlContent }),
-                children: []
+
+                props: "{\"html\":\"<div style='margin-bottom:20px'><div style='width:100%;height:8px;background:#2a2a2a;border-radius:8px;overflow:hidden'><div id=progressbar style='height:8px;width:0%;background:#22c55e'></div></div><div id=videocount style='margin-top:8px;font-size:14px'>0 / 4 videos played</div></div><script>let played=0;const total=4;function update(){document.getElementById('videocount').innerText=played+' / '+total+' videos played';document.getElementById('progressbar').style.width=(played/total*100)+'%';}document.addEventListener('pointerdown',e=>{const iframe=e.target.closest('iframe');if(iframe && !iframe.dataset.counted){iframe.dataset.counted=true;played++;update();}});</script>\"}",
+
+                children: "[]"
+
               },
+
+
+
               {
+
                 id: "video1",
+
                 name: "Iframe",
-                props: JSON.stringify({ src: "https://www.youtube.com/embed/DNEdnKq9Hj0?enablejsapi=1", height: 315 }),
-                children: []
+
+                props: "{\"src\":\"https://www.youtube.com/embed/DNEdnKq9Hj0\",\"height\":315}",
+
+                children: "[]"
+
               },
+
+
+
               {
+
                 id: "video2",
+
                 name: "Iframe",
-                props: JSON.stringify({ src: "https://www.youtube.com/embed/Qtogm_mo1AQ?enablejsapi=1", height: 315 }),
-                children: []
+
+                props: "{\"src\":\"https://www.youtube.com/embed/Qtogm_mo1AQ\",\"height\":315}",
+
+                children: "[]"
+
               },
+
+
+
               {
+
                 id: "video3",
+
                 name: "Iframe",
-                props: JSON.stringify({ src: "https://www.youtube.com/embed/G00dmXhboaw?enablejsapi=1", height: 315 }),
-                children: []
+
+                props: "{\"src\":\"https://www.youtube.com/embed/G00dmXhboaw\",\"height\":315}",
+
+                children: "[]"
+
               },
+
+
+
               {
+
                 id: "video4",
+
                 name: "Iframe",
-                props: JSON.stringify({ src: "https://www.youtube.com/embed/3jsHPvjxR7A?enablejsapi=1", height: 315 }),
-                children: []
+
+                props: "{\"src\":\"https://www.youtube.com/embed/3jsHPvjxR7A\",\"height\":315}",
+
+                children: "[]"
+
               }
+
+
+
             ]
+
           }
+
         }
+
       ]
+
     }
+
   };
 
+
+
   return res.status(200).json(responsePayload);
+
+
+
 });
 
-app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
+
+
+app.listen(PORT, () => {
+
+  console.log(`Server listening on port ${PORT}`);
+
+});
