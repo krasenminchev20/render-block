@@ -71,23 +71,6 @@ app.post("/", (req, res) => {
                 children: "[\"header\",\"counter\",\"video1\",\"video2\",\"video3\",\"video4\"]"
 
               },
-
-
-
-              {
-
-                id: "header",
-
-                name: "Text",
-
-                props: "{\"size\":\"lg\",\"weight\":\"bold\",\"value\":\"Enjoy these hits\"}",
-
-                children: "[]"
-
-              },
-
-
-
               {
 
                 id: "counter",
